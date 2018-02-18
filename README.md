@@ -1,2 +1,3 @@
-# cs411
-CS 411
+# SEER
+CS 411 Project
+
