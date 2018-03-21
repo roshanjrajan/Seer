@@ -10,3 +10,6 @@ def home(request):
 
 def team(request):
 	return render(request, 'team.html')
+
+def login(request):
+	return render(request, 'login.html')
