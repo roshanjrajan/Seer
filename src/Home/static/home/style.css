@@ -1,0 +1,67 @@
+body {
+	margin: 0;
+	padding: 0;
+	background: white url("images/background.jpeg")
+}
+nav ul {
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	background: black;
+	opacity: 0.8;
+	overflow: hidden;
+}
+nav ul li {
+	display: inline-block;
+	padding: 5px;
+	list-style: none;
+	transition: 0.8s;
+}
+nav ul li a {
+	color: white;
+	width: 150px;
+	text-decoration: none;
+	text-align: center;
+	font-size: 16px;
+	font-family: Century Gothic;
+	font-weight: bold;
+	text-transform: uppercase;
+	border-radius: 20px;
+	padding: 10px;
+	display: block;
+}
+nav ul li a:hover {
+	background: #669900/*2aa198*/;
+}
+nav .hide {
+	padding: 16px;
+	color: white;
+	width: 100%;
+	text-align: center;
+	font-size: 16px;
+	font-family: Century Gothic;
+	font-weight: bold;
+	text-transform: uppercase;
+	background: black;
+	opacity: 0.8; 
+	cursor: pointer;
+	display: none;
+}
+@media screen and (max-width: 680px) {
+	nav ul li {
+		width: 100%;
+		padding: 10px;
+		text-align: center;
+	}
+	nav .hide {
+		display: block;
+		text-align: center;
+	}
+	nav ul {
+		max-height: 0;
+		text-align: center;
+	}
+	nav .show {
+		max-height: 20em;
+	}
+}

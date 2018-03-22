@@ -1,0 +1,17 @@
+{% block content %}
+<nav>
+	<div class="hide">
+    	<i class="fa fa-bars" aria-hidden="true"></i> Menu
+    </div>
+	<ul>
+		<li><a href="{% url 'home' %}">Home</a></li>
+    	<li><a href="{% url 'team' %}">Team</a></li>
+    	<li><a href="{% url 'register' %}">Join Now</a></li>
+    </ul>
+</nav>
+<script type="text/javascript">
+	$('nav .hide').on('click', function(){
+		$('nav ul').toggleClass('show');
+	});
+</script>
+{% endblock %}
