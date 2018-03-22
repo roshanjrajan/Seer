@@ -120,8 +120,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Template location
-# TEMPLATE_DIR = (
-#     os.path.join(os.path.dirname(BASE_DIR), 'static', 'templates'),
-#     # /home/wannabehacker/Desktop/SeerProject/static/templates/
-# )
+LOGIN_REDIRECT_URL = '/home/'

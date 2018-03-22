@@ -1,0 +1,16 @@
+{% extends "home/default.html" %}
+
+{% block content %}
+<title>{{ title }}</title>
+
+{% for obj in object_lists %}
+
+{{ obj.first_name }}<br>
+{{ obj.last_name }}<br>
+{{ obj.email }}<br>
+{{ obj.timestamp }}<br>
+{{ obj.updated_since }}<br>
+<br>
+{% endfor %}
+
+{% endblock %}
