@@ -35,7 +35,8 @@ class EditProfileForm(UserChangeForm):
 			'first_name',
 			'last_name',
 			'email',
-			'password'
+			'password',
+			# 'timestamp'
 		)
 
 class DeleteProfileForm(UserChangeForm):

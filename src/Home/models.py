@@ -5,11 +5,11 @@ from django.db.models.signals import post_save, post_delete
 # Create your models here.
 class UserProfile(models.Model):
 	user = models.OneToOneField(User)
-	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
-	updated_since = models.DateTimeField(auto_now_add=False, auto_now=True)
+	profit = models.FloatField(default=0)
+	spent = models.FloatField(default=0)
 
  	def __str__(self): 
- 		return '%s' % (self.user)
+ 		return self.user.username
 
 def create_profile(sender, **kwargs):
  	if kwargs['created']:

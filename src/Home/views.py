@@ -20,7 +20,7 @@ def register(request):
 		
 		if form.is_valid():
 			form.save()
-			return redirect('/home')
+			return redirect('/home/')
 
 	else:
 		form = SignUpForm()
@@ -42,7 +42,7 @@ def edit_profile(request):
 		form = EditProfileForm(instance=request.user)
 		return render(request, 'home/edit.html', {'form': form, 'user': request.user})
 
-def delete_person(request, person_pk):
+def delete_profile(request, person_pk):
     query = User.objects.get(pk=person_pk)
     query.delete()
     return HttpResponse("Deleted!")
