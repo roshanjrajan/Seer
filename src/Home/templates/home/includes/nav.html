@@ -1,18 +1,45 @@
 {% block content %}
-<nav>
-	<div class="hide">
-    	<i class="fa fa-bars" aria-hidden="true"></i> Menu
-    </div>
-	<ul>
-		<li><a href="{% url 'home' %}">Home</a></li>
-    	<li><a href="{% url 'team' %}">Team</a></li>
-    	<li><a href="/login/">Login</a></li>
-    	<li><a href="{% url 'register' %}">Join Now</a></li>
-    </ul>
-</nav>
+<header>
+  	<nav>
+        <div class="menu-icon">
+              <i class="fa fa-bars fa-2x"></i>
+        </div>
+
+        <div class="logo">
+              SEER
+        </div>
+
+        <div class="menu">
+            <ul>   
+				<li><a href="{% url 'home' %}">Home</a></li>
+		    	<li><a href="{% url 'team' %}">Team</a></li>
+		    	<li><a href="{% url 'view_profile' %}">Profile</a></li>
+		    	<li><a href="{% url 'edit_profile' %}">Edit</a></li>
+		    	<li><a href="/login/">Login</a></li>
+		    	<li><a href="/logout/">Logout</a></li>
+		    	<li><a href="{% url 'register' %}">Join Now</a></li>
+            </ul>
+        </div>
+  	</nav>
+</header>
+
 <script type="text/javascript">
-	$('nav .hide').on('click', function(){
-		$('nav ul').toggleClass('show');
-	});
+      // Menu-toggle button
+      $(document).ready(function() {
+            $(".menu-icon").on("click", function() {
+                  $("nav ul").toggleClass("showing");
+            });
+      });
+
+      // Scrolling Effect
+      $(window).on("scroll", function() {
+            if($(window).scrollTop()) {
+                  $('nav').addClass('black');
+            }
+
+            else {
+                  $('nav').removeClass('black');
+            }
+      })
 </script>
 {% endblock %}

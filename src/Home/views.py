@@ -1,36 +1,48 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
-from django.shortcuts import get_object_or_404, render, redirect
-from .forms import SignUpForm
-from .models import SignUp
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.models import User
+from .models import UserProfile
+from .forms import SignUpForm, EditProfileForm, DeleteProfileForm
+from django.shortcuts import get_object_or_404
+from django.core.urlresolvers import reverse
+from django.http.response import HttpResponse
 
 # Create your views here.
-
 def home(request):
-	queryset = SignUp.objects.all()
-	context = {
-		"object_lists": queryset,
-		"title": "Seer Home",
-	}
-	return render(request, 'home/home.html', context)
+	return render(request, 'home/home.html')
 
 def team(request):
 	return render(request, 'home/team.html')
 
 def register(request):
-	form = SignUpForm(request.POST or None)
+	if request.method == 'POST':
+		form = SignUpForm(request.POST)
+		
+		if form.is_valid():
+			form.save()
+			return redirect('/home')
 
-	if form.is_valid():
-		save_it = form.save(commit=False)
-		save_it.save()
+	else:
+		form = SignUpForm()
+		return render(request, 'home/register.html', {'form': form})
 
-	return render(request, 'home/register.html', {'form': form})
+def view_profile(request):
+	context = {'user': request.user}
+	return render(request, 'home/profile.html', context)
 
-def login(request, id):
-	instance = get_object_or_404(Post, id=id)
-	
-	return render(request, 'home/login.html')
+def edit_profile(request):
+	if request.method == 'POST':
+		form = EditProfileForm(request.POST, instance=request.user)
 
-def logout(request):
-	return redirect('/login/')
+		if form.is_valid():
+			form.save()
+			return redirect('/profile')
+
+	else:
+		form = EditProfileForm(instance=request.user)
+		return render(request, 'home/edit.html', {'form': form, 'user': request.user})
+
+def delete_person(request, person_pk):
+    query = User.objects.get(pk=person_pk)
+    query.delete()
+    return HttpResponse("Deleted!")
