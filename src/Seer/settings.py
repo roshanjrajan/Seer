@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Account',
-    'Portfolio',
+    'portfolio',
 ]
 
 MIDDLEWARE = [
@@ -121,5 +121,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = '/account/'
+LOGIN_REDIRECT_URL = '/portfolio/'
 AUTH_PROFILE_MODULE = 'lib.UserProfile'
