@@ -1,0 +1,14 @@
+{% extends "default.html" %}
+
+{% block content %}
+
+<h2>Portfolio: Transaction</h2>
+<hr>
+
+<form action="" method="post">
+  {% csrf_token %}
+  Delete transaction?
+  <input type="submit" />
+</form>
+
+{% endblock %}

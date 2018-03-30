@@ -1,0 +1,16 @@
+{% extends "default.html" %}
+
+{% block content %}
+
+<h2>Portfolio: New Transaction</h2>
+<hr>
+
+<form method="post">
+  {% csrf_token %}
+  <table>
+    {{ form }}
+  </table>
+  <input type="submit" />
+</form>
+
+{% endblock %}
