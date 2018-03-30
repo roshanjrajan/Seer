@@ -25,7 +25,7 @@ SECRET_KEY = 'v&yh_vynt2^vlwr4+#u$+-(us70d#!4$&1f3(jv)q1bvmrw93$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [] #probably will have to put the AWS Host link
+ALLOWED_HOSTS = ['*'] #probably will have to put the AWS Host link
 
 
 # Application definition
