@@ -1,2 +1,4 @@
 src/crypto_models/test_data/*.csv
-
+lib/*
+bin/*
+include/*
