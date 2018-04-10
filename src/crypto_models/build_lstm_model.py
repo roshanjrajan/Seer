@@ -15,7 +15,6 @@ from keras.models import load_model
 
 # parsing inputs
 def printUsage(): print "usage: python ", sys.argv[0], "-i inputdatafile.csv -o outputmodel.h5"
-
 try:
 	iflagidx = sys.argv.index('-i')
 	inputfilename = sys.argv[iflagidx+1]
@@ -23,8 +22,6 @@ try:
 	outputfilename = sys.argv[oflagidx+1]
 except ValueError:
 	printUsage()
-
-exit()
 
 ''' Putting data into a dataframe '''
 # slug,symbol,name,date,ranknow,open,high,low,close,volume,market,close_ratio,spread
