@@ -23,11 +23,11 @@ all_data = pd.read_csv(inputfilename)
 # sort by name and time, then drop non-numerical attributes
 all_data['time'] = all_data.apply(lambda t: time.mktime(datetime.strptime(t['date'], '%Y-%m-%d').timetuple()), axis=1)
 all_data = all_data.sort_values(by=['name','time'])
-all_data = all_data.drop(['slug','symbol','name','date','ranknow'], 1)
+all_data = all_data.drop(['slug','symbol','name','date','ranknow','time'], 1)
 
 # per-row attribute modification
-all_data['close_off_high'] = 2*(all_data['high']-all_data['close'])\
-                             /(all_data['high']-all_data['low'])-1
-all_data['volatility'] = (all_data['high']-all_data['low'])/all_data['open']
+# all_data['close_off_high'] = 2*(all_data['high']-all_data['close'])\
+#                              /(all_data['high']-all_data['low'])-1
+# all_data['volatility'] = (all_data['high']-all_data['low'])/all_data['open']
 
 all_data.to_csv(outputfilename, encoding='utf-8', index=False)

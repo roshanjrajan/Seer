@@ -27,25 +27,26 @@ except ValueError:
 ''' Putting data into a dataframe '''
 all_data = pd.read_csv(inputfilename)
 
-if 'open' not in list(all_data) or 'time' not in list(all_data):
+if 'open' not in list(all_data):
 	# CSV doesn't have the right data
 	print '"open" or "time" is not an attribute in this data'
 	exit()
 
 # make train test split: train on x% of data before a date, test on data after
-train_percentage = .8
-tpth_percentile_time = np.percentile(np.asarray(all_data['time']), train_percentage*100)
-train_data, test_data = all_data[all_data['time']<tpth_percentile_time], all_data[all_data['time']>=tpth_percentile_time]
+train_percentage = .8; train_num = int(len(all_data)*train_percentage)
+train_data, test_data = all_data[0:train_num], all_data[train_num:]
+#tpth_percentile_time = np.percentile(np.asarray(all_data['time']), train_percentage*100)
+#train_data, test_data = all_data[all_data['time']<tpth_percentile_time], all_data[all_data['time']>=tpth_percentile_time]
 # drop time  column
-train_data = train_data.drop('time',1)
-test_data = test_data.drop('time',1)
+# train_data = train_data.drop('time',1)
+# test_data = test_data.drop('time',1)
 
 ''' creating windows of timeseries data '''
 window_len = 10
 # per-window attribute modification
 	# normalize the specified columns to the value of the first entry
 #['high','low','close','open_high_diff','close_high_diff']
-cols_to_normalize = ['high','low','close','volatility','close_off_high']
+cols_to_normalize = ['high','low','close']#,'volatility','close_off_high']
 
 lstm_train_input = []
 for i in range(len(train_data)-window_len):
