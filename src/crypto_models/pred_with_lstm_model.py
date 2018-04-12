@@ -22,9 +22,14 @@ except ValueError:
 	print "usage: python ", sys.argv[0], "-m inputmodel.h5 -i inputsample.csv"
 	exit()
 
+# load sample
 sample = np.genfromtxt(inputsamplename,delimiter=',')
 sample = np.expand_dims(sample, axis=0)
 
+# load model
 model = load_model(inputmodelname)
+
+# predict value, unnormalize the prediction
 pred = model.predict(sample)
+pred = (pred+1) * np.average(sample[0,:,0])
 print pred

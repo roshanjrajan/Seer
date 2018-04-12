@@ -28,7 +28,7 @@ except ValueError:
 all_data = pd.read_csv(inputfilename)
 
 if 'open' not in list(all_data) or 'time' not in list(all_data):
-	# CSV doesn't have the right data 
+	# CSV doesn't have the right data
 	print '"open" or "time" is not an attribute in this data'
 	exit()
 
@@ -44,33 +44,34 @@ test_data = test_data.drop('time',1)
 window_len = 10
 # per-window attribute modification
 	# normalize the specified columns to the value of the first entry
-cols_to_normalize = ['high','low','close',\
-					 'open_high_diff','close_high_diff']
+#['high','low','close','open_high_diff','close_high_diff']
+cols_to_normalize = ['high','low','close','volatility','close_off_high']
 
 lstm_train_input = []
 for i in range(len(train_data)-window_len):
 	w = train_data[i:(i+window_len)].copy()
-	# for col in cols_to_normalize:
-	# 	w.loc[:,col] = w[col]/w[col].iloc[0] - 1
+	for col in cols_to_normalize:
+		w.loc[:,col] = w[col]/w[col].iloc[0] - 1
 	lstm_train_input.append(w)
-lstm_train_output = train_data['open'][window_len:].values
- # (train_data['open'][window_len:].values/train_data['open'][:-window_len].values)-1
+lstm_train_output = \
+ (train_data['open'][window_len:].values/train_data['open'][:-window_len].values)-1 # normalized
+# train_data['open'][window_len:].values unnormalized
 
 lstm_test_input = []
 for i in range(len(test_data)-window_len):
 	w = test_data[i:(i+window_len)].copy()
-	# for col in cols_to_normalize:
-	# 	w.loc[:,col] = w[col]/w[col].iloc[0] - 1
+	for col in cols_to_normalize:
+		w.loc[:,col] = w[col]/w[col].iloc[0] - 1
 	lstm_test_input.append(w)
-lstm_test_output = test_data['open'][window_len:].values
-#  (test_data['open'][window_len:].values/test_data['open'][:-window_len].values)-1
+lstm_test_output = \
+(test_data['open'][window_len:].values/test_data['open'][:-window_len].values)-1 # normalized
+# test_data['open'][window_len:].values unnormalized
 
 ''' putting input windows into numpy arrays '''
 lstm_train_input = [np.array(window) for window in lstm_train_input]
 lstm_train_input = np.array(lstm_train_input)
 lstm_test_input = [np.array(window) for window in lstm_test_input]
 lstm_test_input = np.array(lstm_test_input)
-
 
 def build_model(inputs, output_size, neurons, activ_func = "linear",
                 dropout =0.25, loss="mae", optimizer="adam"):
@@ -87,7 +88,7 @@ def build_model(inputs, output_size, neurons, activ_func = "linear",
 # build the model
 m = build_model(lstm_train_input, output_size=1, neurons=20)
 out = (train_data['open'][window_len:].values/train_data['open'][:-window_len].values)-1
-hist = m.fit(lstm_train_input, lstm_train_output, epochs=50, batch_size=1, verbose=2, shuffle=True)
+hist = m.fit(lstm_train_input, lstm_train_output, epochs=10, batch_size=1, verbose=2, shuffle=True)
 
 # save the model
 m.save(outputfilename)
