@@ -27,9 +27,9 @@ except ValueError:
 ''' Putting data into a dataframe '''
 all_data = pd.read_csv(inputfilename)
 
-if 'open' not in list(all_data):
+if 'close' not in list(all_data):
 	# CSV doesn't have the right data
-	print '"open" or "time" is not an attribute in this data'
+	print '"close" or "time" is not an attribute in this data'
 	exit()
 
 # make train test split: train on x% of data before a date, test on data after
@@ -55,8 +55,8 @@ for i in range(len(train_data)-window_len):
 		w.loc[:,col] = w[col]/w[col].iloc[0] - 1
 	lstm_train_input.append(w)
 lstm_train_output = \
- (train_data['open'][window_len:].values/train_data['open'][:-window_len].values)-1 # normalized
-# train_data['open'][window_len:].values unnormalized
+ (train_data['close'][window_len:].values/train_data['close'][:-window_len].values)-1 # normalized
+# train_data['close'][window_len:].values unnormalized
 
 lstm_test_input = []
 for i in range(len(test_data)-window_len):
@@ -65,8 +65,8 @@ for i in range(len(test_data)-window_len):
 		w.loc[:,col] = w[col]/w[col].iloc[0] - 1
 	lstm_test_input.append(w)
 lstm_test_output = \
-(test_data['open'][window_len:].values/test_data['open'][:-window_len].values)-1 # normalized
-# test_data['open'][window_len:].values unnormalized
+(test_data['close'][window_len:].values/test_data['close'][:-window_len].values)-1 # normalized
+# test_data['close'][window_len:].values unnormalized
 
 ''' putting input windows into numpy arrays '''
 lstm_train_input = [np.array(window) for window in lstm_train_input]
@@ -88,7 +88,7 @@ def build_model(inputs, output_size, neurons, activ_func = "linear",
 
 # build the model
 m = build_model(lstm_train_input, output_size=1, neurons=20)
-out = (train_data['open'][window_len:].values/train_data['open'][:-window_len].values)-1
+out = (train_data['close'][window_len:].values/train_data['close'][:-window_len].values)-1
 hist = m.fit(lstm_train_input, lstm_train_output, epochs=10, batch_size=1, verbose=2, shuffle=True)
 
 # save the model
