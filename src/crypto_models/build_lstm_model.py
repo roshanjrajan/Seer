@@ -55,7 +55,7 @@ for i in range(len(train_data)-window_len):
 		w.loc[:,col] = w[col]/w[col].iloc[0] - 1
 	lstm_train_input.append(w)
 lstm_train_output = \
- (train_data['close'][window_len:].values/train_data['close'][:-window_len].values)-1 # normalized
+ (train_data[window_len:].values/(train_data[:-window_len].values+1))-1 # normalized
 # train_data['close'][window_len:].values unnormalized
 
 lstm_test_input = []
@@ -65,7 +65,7 @@ for i in range(len(test_data)-window_len):
 		w.loc[:,col] = w[col]/w[col].iloc[0] - 1
 	lstm_test_input.append(w)
 lstm_test_output = \
-(test_data['close'][window_len:].values/test_data['close'][:-window_len].values)-1 # normalized
+(test_data[window_len:].values/(test_data[:-window_len].values+1))-1 # normalized
 # test_data['close'][window_len:].values unnormalized
 
 ''' putting input windows into numpy arrays '''
@@ -87,8 +87,8 @@ def build_model(inputs, output_size, neurons, activ_func = "linear",
     return model
 
 # build the model
-m = build_model(lstm_train_input, output_size=1, neurons=20)
-out = (train_data['close'][window_len:].values/train_data['close'][:-window_len].values)-1
+m = build_model(lstm_train_input, output_size=np.shape(lstm_test_input)[2], neurons=20)
+out = (train_data[window_len:].values/(train_data[:-window_len].values+1))-1
 hist = m.fit(lstm_train_input, lstm_train_output, epochs=10, batch_size=1, verbose=2, shuffle=True)
 
 # save the model

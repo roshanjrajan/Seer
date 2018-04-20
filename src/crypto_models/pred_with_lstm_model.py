@@ -17,9 +17,12 @@ try:
 	inputmodelname = sys.argv[mflagidx+1]
 	iflagidx = sys.argv.index('-i')
 	inputsamplename = sys.argv[iflagidx+1]
+	dflagidx = sys.argv.index('-d')
+	daycount = int(sys.argv[dflagidx+1])
+
 except ValueError:
 	# malformed command line arguments, print usage and exit
-	print "usage: python ", sys.argv[0], "-m inputmodel.h5 -i inputsample.csv"
+	print "usage: python ", sys.argv[0], "-m inputmodel.h5 -i inputsample.csv -d daycount"
 	exit()
 
 # load sample
@@ -29,7 +32,17 @@ sample = np.expand_dims(sample, axis=0)
 # load model
 model = load_model(inputmodelname)
 
-# predict value, unnormalize the prediction
-pred = model.predict(sample)
-pred = (pred+1) * np.average(sample[0,:,0])
-print pred
+preds = []
+
+# predict the metrics for the given cryptocurrency for the subsequent d days
+for d in range(daycount):
+	# predict values, unnormalize the prediction
+	pred = model.predict(sample)
+	pred = (pred+1) * (np.average(sample,axis=1) - 1)
+	# use prediction to modify input window, and add the prediction to the list of predictions
+	preds.append(pred)
+
+	sample = np.append(sample, [pred], axis=1)
+	sample = np.delete(sample, 0, axis=1)
+	
+print preds
