@@ -9,8 +9,8 @@ class UserProfile(models.Model):
 	profit = models.FloatField(default=0)
 	spent = models.FloatField(default=0)
 	email_confirmed = models.BooleanField(default=False)
-
- 	def __str__(self): 
+	
+	def __str__(self): 
  		return self.user.username
 
 def create_profile(sender, **kwargs):
