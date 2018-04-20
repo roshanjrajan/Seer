@@ -26,6 +26,3 @@ class TransactionDeleteView(DeleteView):
     model = Transaction
     fields = '__all__'
     success_url = "/portfolio/txn"
-
-def queryCurrencyData(request):
-    
