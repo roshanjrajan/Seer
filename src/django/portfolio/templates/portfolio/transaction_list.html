@@ -7,24 +7,29 @@
 
 <table>
   <tr>
-    <th>Date</th>
+    <th>User</th>
     <th>Action</th>
-    <th>Security</th>
+    <th>Date</th>
     <th>Shares</th>
     <th>Price</th>
-    <th>Commission</th>
+    <th>Time</th>
     <th>&nbsp;</th>
   </tr>
 
   {% for t in object_list %}
   <tr>
-    <td><a href="{{t.id}}">{{t.date|date:"d M Y"}}</a></td>
+    <td>{{ t.account }}</td>
     <td>{{ t.action }}</td>
-    <td>{{t.security}}</td>
-    <td>{{t.shares}}</td>
-    <td>{{t.price}}</td>
-    <td>{{t.commission}}</td>
-    <td><a href="{{t.id}}/delete">Delete</a></td>
+    <td>{{ t.date|date:"d M Y" }}</td>
+    <td>{{ t.number_of_stocks }}</td>
+    <td>{{ t.price }}</td>
+    <td>{{ t.time }}</td>
+    <td><a href="{{t.id}}">
+      <input type="submit" value="Edit" /></a>
+    </td>
+    <td><a href="{{t.id}}/delete">
+      <input type="submit" value="Delete" /></a>
+    </td>
   </tr>
   {% endfor %}
 

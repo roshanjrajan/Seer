@@ -25,7 +25,7 @@ SECRET_KEY = 'v&yh_vynt2^vlwr4+#u$+-(us70d#!4$&1f3(jv)q1bvmrw93$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*'] #probably will have to put the AWS Host link
+ALLOWED_HOSTS = ['10.194.240.58', '127.0.0.1', 'cloudberry.web.engr.illinois.edu']
 
 
 # Application definition
@@ -80,6 +80,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'django_db',
+    #     'USER': 'db_user',
+    #     'PASSWORD': 'p@ssword',
+    #     'HOST': 'localhost',
+    #     'PORT': '',                      # Set to empty string for default.
+    # }
 }
 
 
@@ -119,6 +127,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/portfolio/'
@@ -130,3 +139,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST_USER = 'youremail@gmail.com'
 # EMAIL_HOST_PASSWORD = 'yourpassword'
 # EMAIL_PORT = 587
+
+
+# location /static/ {
+#         alias   /home/wannabehacker/static/;
+#     }

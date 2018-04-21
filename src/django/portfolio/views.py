@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from .models import Transaction, CryptocurrencyLog
+from .models import Transaction
 
 # Create your views here.
 class port_view(TemplateView):
