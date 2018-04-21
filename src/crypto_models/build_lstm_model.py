@@ -6,6 +6,7 @@ import numpy as np
 import time
 from datetime import datetime
 import matplotlib.pyplot as plt
+import MySQLdb
 
 from keras.models import Sequential
 from keras.layers import Activation, Dense
@@ -13,83 +14,98 @@ from keras.layers import LSTM
 from keras.layers import Dropout
 from keras.models import load_model
 
-# parsing inputs
-try:
-	iflagidx = sys.argv.index('-i')
-	inputfilename = sys.argv[iflagidx+1]
-	oflagidx = sys.argv.index('-o')
-	outputfilename = sys.argv[oflagidx+1]
-except ValueError:
-	# malformed command line arguments, print usage and exit
-	print "usage: python ", sys.argv[0], "-i inputdatafile.csv -o outputmodel.h5"
-	exit()
+WINDOW_LEN = 10
 
-''' Putting data into a dataframe '''
-all_data = pd.read_csv(inputfilename)
+def normalize_window(window, columnNames):
+	for col in columnNames:
+			w.loc[:,col] = pw[col]/(w[col].iloc[0]+1) - 1
 
-if 'close' not in list(all_data):
-	# CSV doesn't have the right data
-	print '"close" or "time" is not an attribute in this data'
-	exit()
+def main():
+	# parsing inputs
+	try:
+		cflagidx = sys.argv.index('-c')
+		currencyname = sys.argv[cflagidx+1]
+		oflagidx = sys.argv.index('-o')
+		outputfilename = sys.argv[oflagidx+1]
+	except ValueError:
+		# malformed command line arguments, print usage and exit
+		print "usage: python ", sys.argv[0], "-c nameOfCurrency -o outputmodel.h5"
+		exit()
 
-# make train test split: train on x% of data before a date, test on data after
-train_percentage = .8; train_num = int(len(all_data)*train_percentage)
-train_data, test_data = all_data[0:train_num], all_data[train_num:]
-#tpth_percentile_time = np.percentile(np.asarray(all_data['time']), train_percentage*100)
-#train_data, test_data = all_data[all_data['time']<tpth_percentile_time], all_data[all_data['time']>=tpth_percentile_time]
-# drop time  column
-# train_data = train_data.drop('time',1)
-# test_data = test_data.drop('time',1)
+	''' Stuff about our data for querying '''
+	trainingAttributes = ['Open', 'High', 'Low', 'Close']
 
-''' creating windows of timeseries data '''
-window_len = 10
-# per-window attribute modification
-	# normalize the specified columns to the value of the first entry
-#['high','low','close','open_high_diff','close_high_diff']
-cols_to_normalize = ['high','low','close']#,'volatility','close_off_high']
+	''' SQL Query for Training Data '''
+	db = MySQLdb.connect(host="localhost",
+						 user="admin",
+						 passwd="p@ssword",
+						 db="crypto")
+	cursor = db.cursor()
+	query = "SELECT " + ", ".join(trainingAttributes) + "FROM crypto"\
+	        + "WHERE Currency=\'"+currencyname+"\'"
+	        + "ORDER BY Timestamp ASC"
+	cursor.execute(query)
+	results = cursor.fetchall()
+	all_data = pd.DataFrame(all_data, columns=trainingAttributes)
+	db.close()
 
-lstm_train_input = []
-for i in range(len(train_data)-window_len):
-	w = train_data[i:(i+window_len)].copy()
-	for col in cols_to_normalize:
-		w.loc[:,col] = w[col]/w[col].iloc[0] - 1
-	lstm_train_input.append(w)
-lstm_train_output = \
- (train_data[window_len:].values/(train_data[:-window_len].values+1))-1 # normalized
-# train_data['close'][window_len:].values unnormalized
+	# feature discovery
+	all_data['volatility'] = (all_data['high']-all_data['low'])/all_data['close']
 
-lstm_test_input = []
-for i in range(len(test_data)-window_len):
-	w = test_data[i:(i+window_len)].copy()
-	for col in cols_to_normalize:
-		w.loc[:,col] = w[col]/w[col].iloc[0] - 1
-	lstm_test_input.append(w)
-lstm_test_output = \
-(test_data[window_len:].values/(test_data[:-window_len].values+1))-1 # normalized
-# test_data['close'][window_len:].values unnormalized
 
-''' putting input windows into numpy arrays '''
-lstm_train_input = [np.array(window) for window in lstm_train_input]
-lstm_train_input = np.array(lstm_train_input)
-lstm_test_input = [np.array(window) for window in lstm_test_input]
-lstm_test_input = np.array(lstm_test_input)
+	# make train test split: train on x% of data before a date, test on data after
+	train_percentage = 1.0; train_num = int(len(all_data)*train_percentage)
+	train_data, test_data = all_data[0:train_num], all_data[train_num:]
 
-def build_model(inputs, output_size, neurons, activ_func = "linear",
-                dropout =0.25, loss="mae", optimizer="adam"):
-    model = Sequential()
+	''' creating windows of timeseries data '''
+	# per-window attribute modification
+		# normalize the specified columns to the value of the first entry
+	#['high','low','close','open_high_diff','close_high_diff']
+	cols_to_normalize = ['open','high','low','close']
 
-    model.add(LSTM(neurons, input_shape=(inputs.shape[1], inputs.shape[2])))
-    model.add(Dropout(dropout))
-    model.add(Dense(units=output_size))
-    model.add(Activation(activ_func))
+	lstm_train_input = []
+	for i in range(len(train_data)-WINDOW_LEN):
+		w = train_data[i:(i+WINDOW_LEN)].copy()
+		lstm_train_input.append(w)
+	for w in lstm_train_input: normalize_window(w, cols_to_normalize)
+	lstm_train_output = \
+	 (train_data[WINDOW_LEN:].values/(train_data[:-WINDOW_LEN].values+1))-1 # normalized
+	# train_data['close'][WINDOW_LEN:].values unnormalized
 
-    model.compile(loss=loss, optimizer=optimizer)
-    return model
+	lstm_test_input = []
+	for i in range(len(test_data)-WINDOW_LEN):
+		w = test_data[i:(i+WINDOW_LEN)].copy()
+		lstm_test_input.append(w)
+	for w in lstm_test_input: normalize_window(w, cols_to_normalize) 
+	lstm_test_output = \
+	(test_data[WINDOW_LEN:].values/(test_data[:-WINDOW_LEN].values+1))-1 # normalized
+	# test_data['close'][WINDOW_LEN:].values unnormalized
 
-# build the model
-m = build_model(lstm_train_input, output_size=np.shape(lstm_test_input)[2], neurons=20)
-out = (train_data[window_len:].values/(train_data[:-window_len].values+1))-1
-hist = m.fit(lstm_train_input, lstm_train_output, epochs=10, batch_size=1, verbose=2, shuffle=True)
+	''' putting input windows into numpy arrays '''
+	lstm_train_input = [np.array(window) for window in lstm_train_input]
+	lstm_train_input = np.array(lstm_train_input)
+	lstm_test_input = [np.array(window) for window in lstm_test_input]
+	lstm_test_input = np.array(lstm_test_input)
 
-# save the model
-m.save(outputfilename)
+	def build_model(inputs, output_size, neurons, activ_func = "linear",
+	                dropout =0.25, loss="mae", optimizer="adam"):
+	    model = Sequential()
+
+	    model.add(LSTM(neurons, input_shape=(inputs.shape[1], inputs.shape[2])))
+	    model.add(Dropout(dropout))
+	    model.add(Dense(units=output_size))
+	    model.add(Activation(activ_func))
+
+	    model.compile(loss=loss, optimizer=optimizer)
+	    return model
+
+	# build the model
+	m = build_model(lstm_train_input, output_size=np.shape(lstm_test_input)[2], neurons=20)
+	out = (train_data[WINDOW_LEN:].values/(train_data[:-WINDOW_LEN].values+1))-1
+	hist = m.fit(lstm_train_input, lstm_train_output, epochs=10, batch_size=1, verbose=2, shuffle=True)
+
+	# save the model
+	m.save(outputfilename)
+
+if __name__ = "__main__":
+	main()

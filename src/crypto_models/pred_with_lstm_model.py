@@ -11,6 +11,8 @@ from keras.layers import LSTM
 from keras.layers import Dropout
 from keras.models import load_model
 
+import build_lstm_model
+
 # parsing inputs
 try:
 	mflagidx = sys.argv.index('-m')
@@ -37,6 +39,7 @@ preds = []
 # predict the metrics for the given cryptocurrency for the subsequent d days
 for d in range(daycount):
 	# predict values, unnormalize the prediction
+	normalized_window = normalize_window(sample)
 	pred = model.predict(sample)
 	pred = (pred+1) * (np.average(sample,axis=1) - 1)
 	# use prediction to modify input window, and add the prediction to the list of predictions
