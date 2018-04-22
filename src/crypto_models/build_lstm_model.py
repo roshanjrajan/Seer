@@ -20,6 +20,7 @@ NEURON_COUNT = 20
 NUM_EPOCHS = 25
 TRAINING_ATTRIBUTES = ['open', 'high', 'low', 'close', 'volumefrom', 'volumeto']
 COLS_TO_NORMALIZE = ['open','high','low','close']
+DISCOVERED_COLS = ['volatility']
 
 # normalize each value in the window to fit the value
 # of the first value in the window
@@ -43,7 +44,7 @@ def main():
 		exit()
 
 	''' SQL Query for Training Data '''
-        conn = psycopg2.connect("host=localhost dbname=crypto user=postgres")
+    conn = psycopg2.connect("host=localhost dbname=crypto user=postgres")
 	cursor = conn.cursor()
 	query = "SELECT " + ", ".join(TRAINING_ATTRIBUTES) + " FROM bitcoin"\
 	        + " WHERE UPPER(Currency)=UPPER(\'"+currencyname+"\')"\
