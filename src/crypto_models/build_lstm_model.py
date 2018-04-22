@@ -15,9 +15,9 @@ from keras.layers import Dropout
 from keras.models import load_model
 
 WINDOW_LEN = 10
-MAX_TRAIN_SIZE = 1000
+MAX_TRAIN_SIZE = 16000
 NEURON_COUNT = 20
-NUM_EPOCHS = 25
+NUM_EPOCHS = 10
 TRAINING_ATTRIBUTES = ['open', 'high', 'low', 'close', 'volumefrom', 'volumeto']
 COLS_TO_NORMALIZE = ['open','high','low','close']
 DISCOVERED_COLS = ['volatility']
@@ -36,22 +36,21 @@ def main():
 	try:
 		cflagidx = sys.argv.index('-c')
 		currencyname = sys.argv[cflagidx+1]
-		oflagidx = sys.argv.index('-o')
-		outputfilename = sys.argv[oflagidx+1]
 	except ValueError:
 		# malformed command line arguments, print usage and exit
-		print "usage: python ", sys.argv[0], "-c nameOfCurrency -o outputmodel.h5"
+		print "usage: python ", sys.argv[0], "-c nameOfCurrency"
 		exit()
 
 	''' SQL Query for Training Data '''
         conn = psycopg2.connect("host=localhost dbname=crypto user=postgres")
 	cursor = conn.cursor()
-	query = "SELECT " + ", ".join(TRAINING_ATTRIBUTES) + " FROM bitcoin"\
+	query = "SELECT " + ", ".join(TRAINING_ATTRIBUTES) + " FROM cryptocurrency"\
 	        + " WHERE UPPER(Currency)=UPPER(\'"+currencyname+"\')"\
 	        + " ORDER BY time ASC"
 	cursor.execute(query)
 	results = cursor.fetchall()
 	all_data = pd.DataFrame(results, columns=TRAINING_ATTRIBUTES)
+        del(results)
         conn.close()
 
 	# feature discovery
@@ -59,15 +58,17 @@ def main():
 
 	# make train test split: train on x% of data before a date, test on data after
 	train_percentage = 1.0; train_num = int(len(all_data)*train_percentage)
-        train_data = all_data[-MAX_TRAIN_SIZE:]
+        train_data = all_data[-min(MAX_TRAIN_SIZE, len(all_data)):]
         del(all_data)
 
 	''' creating windows of timeseries data and normalising windows '''
 	lstm_train_input = []
 	for i in range(len(train_data)-WINDOW_LEN):
-		w = train_data[i:(i+WINDOW_LEN)].copy()
-		lstm_train_input.append(w)
+            if (i%1000==0): print i
+	    w = train_data[i:(i+WINDOW_LEN)].copy()
+	    lstm_train_input.append(w)
 	for i in range(len(lstm_train_input)):
+            if (i%1000==0): print i
             normalize_window_df(lstm_train_input[i], COLS_TO_NORMALIZE)
 	lstm_train_output = \
 	 (train_data[WINDOW_LEN:].values/(train_data[:-WINDOW_LEN].values+1))-1 # normalized
@@ -94,7 +95,7 @@ def main():
         hist = m.fit(lstm_train_input, lstm_train_output, epochs=NUM_EPOCHS, batch_size=1, verbose=2, shuffle=True)
 
 	# save the model
-	m.save(outputfilename)
+	m.save(currencyname+"_model.h5")
 
 if __name__ == "__main__":
-	main()
+    main()

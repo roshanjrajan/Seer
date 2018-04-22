@@ -23,7 +23,7 @@ def predict_future(currencyname, daycount, inputmodelname):
 	conn = psycopg2.connect("host=localhost dbname=crypto user=postgres")
 	cursor = conn.cursor()
 	query = "SELECT " + ", ".join(TRAINING_ATTRIBUTES) + " FROM ("\
-	        + "SELECT " + ", ".join(TRAINING_ATTRIBUTES)+", time FROM bitcoin "\
+	        + "SELECT " + ", ".join(TRAINING_ATTRIBUTES)+", time FROM cryptocurrency "\
 	        + " WHERE UPPER(Currency)=UPPER(\'"+currencyname+"\')"\
 	        + " ORDER BY Time DESC LIMIT "+str(WINDOW_LEN)\
 	        + ") as sub "\
