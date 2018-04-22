@@ -12,7 +12,7 @@ def main():
 		argfuturecount = DEFAULT_FUTURE_COUNT
 
 		mflagidx = sys.argv.index('-m')
-		modelname = sys.argv[mflagidx+1]
+		argmodelname = sys.argv[mflagidx+1]
 		cflagidx = sys.argv.index('-c')
 		argcurrencyname = sys.argv[cflagidx+1]
 		
@@ -30,13 +30,19 @@ def main():
 		print "-p and -f optional"
 		exit()
 
+        currencyname = argcurrencyname
+        pastcount = argpastcount
+        futurecount = argfuturecount
+        currencyname = argcurrencyname
+        modelname = argmodelname
+
 	# get the past days data
 	conn = psycopg2.connect("host=localhost dbname=crypto user=postgres")
 	cursor = conn.cursor()
 	query = "SELECT " + ", ".join(TRAINING_ATTRIBUTES) + " FROM ("\
 	        + "SELECT " + ", ".join(TRAINING_ATTRIBUTES)+", time FROM bitcoin "\
 	        + " WHERE UPPER(Currency)=UPPER(\'"+currencyname+"\')"\
-	        + " ORDER BY Time DESC LIMIT "+str(argpastcount)\
+	        + " ORDER BY Time DESC LIMIT "+str(pastcount)\
 	        + ") as sub "\
 	        + " ORDER BY time ASC"
 	cursor.execute(query)
@@ -46,10 +52,11 @@ def main():
 
 	# get the predicted future data
 	future_df = predict_future(inputmodelname = modelname,
-					currencyname = argcurrencyname,
-					daycount = argfuturecount)
+					currencyname = currencyname,
+					daycount = futurecount)
 
-	print past_df, future_df
+	print past_df
+        print future_df
 
-if __name__ is "__main__":
+if __name__ == "__main__":
 	main()
