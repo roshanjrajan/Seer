@@ -44,7 +44,7 @@ def main():
 		exit()
 
 	''' SQL Query for Training Data '''
-    conn = psycopg2.connect("host=localhost dbname=crypto user=postgres")
+        conn = psycopg2.connect("host=localhost dbname=crypto user=postgres")
 	cursor = conn.cursor()
 	query = "SELECT " + ", ".join(TRAINING_ATTRIBUTES) + " FROM bitcoin"\
 	        + " WHERE UPPER(Currency)=UPPER(\'"+currencyname+"\')"\
@@ -68,7 +68,6 @@ def main():
 		w = train_data[i:(i+WINDOW_LEN)].copy()
 		lstm_train_input.append(w)
 	for i in range(len(lstm_train_input)):
-            print(type(lstm_train_input[i]))
             normalize_window_df(lstm_train_input[i], COLS_TO_NORMALIZE)
 	lstm_train_output = \
 	 (train_data[WINDOW_LEN:].values/(train_data[:-WINDOW_LEN].values+1))-1 # normalized

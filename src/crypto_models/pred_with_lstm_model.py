@@ -25,7 +25,7 @@ def predict_future(currencyname, daycount, inputmodelname):
 	query = "SELECT " + ", ".join(TRAINING_ATTRIBUTES) + " FROM ("\
 	        + "SELECT " + ", ".join(TRAINING_ATTRIBUTES)+", time FROM bitcoin "\
 	        + " WHERE UPPER(Currency)=UPPER(\'"+currencyname+"\')"\
-	        + " ORDER BY Time DESC LIMIT "+str(WINDOW_LEN)+\
+	        + " ORDER BY Time DESC LIMIT "+str(WINDOW_LEN)\
 	        + ") as sub "\
 	        + " ORDER BY time ASC"
 	cursor.execute(query)
@@ -35,7 +35,6 @@ def predict_future(currencyname, daycount, inputmodelname):
 	discover_features(df)
 	sample = df.as_matrix().copy()
 	sample = np.expand_dims(sample, axis=0)
-	print sample
 	conn.close()
 
 	# load model
@@ -50,13 +49,13 @@ def predict_future(currencyname, daycount, inputmodelname):
 	        pred = model.predict(normalized_window)
 	        pred = (pred+1) * (np.average(sample, axis=1) - 1)
 		# use prediction to modify input window, and add the prediction to the list of predictions
-		preds.append(pred)
+		preds.append(pred[0])
 
 		sample = np.append(sample, [pred], axis=1)
 		sample = np.delete(sample, 0, axis=1)
 		
-	ret = pd.DataFrame(preds, columns=list(df))
-	ret.drop(columns=DISCOVERED_COLS)
+        ret = pd.DataFrame(preds, columns=list(df))
+        ret = ret.drop(columns=DISCOVERED_COLS)
 	return ret
 
 def main():
@@ -78,6 +77,6 @@ def main():
 			inputmodelname = arginputmodelname,
 			daycount = argdaycount)
 
-if __name__ is "__main__":
+if __name__ == "__main__":
 	main()
 
