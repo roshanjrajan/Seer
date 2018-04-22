@@ -6,7 +6,7 @@ import numpy as np
 import time
 from datetime import datetime
 import matplotlib.pyplot as plt
-import MySQLdb
+import psycopg2
 
 from keras.models import Sequential
 from keras.layers import Activation, Dense
@@ -36,17 +36,15 @@ def main():
 	trainingAttributes = ['open', 'high', 'low', 'close', 'volumefrom', 'volumeto']
 
 	''' SQL Query for Training Data '''
-	db = MySQLdb.connect(host="localhost",
-						 user="postgres", #passwd='',
-						 db="crypto")
-	cursor = db.cursor()
-	query = "SELECT " + ", ".join(trainingAttributes) + "FROM bitcoin"\
-	        + "WHERE Currency=\'"+currencyname+"\'"
-	        + "ORDER BY time ASC"
+        conn = psycopg2.connect("host=localhost dbname=crypto user=postgres")
+	cursor = conn.cursor()
+	query = "SELECT " + ", ".join(trainingAttributes) + " FROM bitcoin"\
+	        + " WHERE Currency=\'"+currencyname+"\'"\
+	        + " ORDER BY time ASC"
 	cursor.execute(query)
 	results = cursor.fetchall()
-	all_data = pd.DataFrame(all_data, columns=trainingAttributes)
-	db.close()
+	all_data = pd.DataFrame(results, columns=trainingAttributes)
+        conn.close()
 
 	# feature discovery
 	all_data['volatility'] = (all_data['high']-all_data['low'])/all_data['close']
@@ -106,5 +104,5 @@ def main():
 	# save the model
 	m.save(outputfilename)
 
-if __name__ = "__main__":
+if __name__ == "__main__":
 	main()

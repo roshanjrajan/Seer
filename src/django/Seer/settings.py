@@ -25,7 +25,7 @@ SECRET_KEY = 'v&yh_vynt2^vlwr4+#u$+-(us70d#!4$&1f3(jv)q1bvmrw93$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.194.240.58', '127.0.0.1', 'cloudberry.web.engr.illinois.edu']
+ALLOWED_HOSTS = ['18.188.144.190', '127.0.0.1', 'cloudberry.web.engr.illinois.edu']
 
 
 # Application definition
