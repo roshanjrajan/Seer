@@ -33,17 +33,16 @@ def main():
 		exit()
 
 	''' Stuff about our data for querying '''
-	trainingAttributes = ['Open', 'High', 'Low', 'Close']
+	trainingAttributes = ['open', 'high', 'low', 'close', 'volumefrom', 'volumeto']
 
 	''' SQL Query for Training Data '''
 	db = MySQLdb.connect(host="localhost",
-						 user="admin",
-						 passwd="p@ssword",
+						 user="postgres", #passwd='',
 						 db="crypto")
 	cursor = db.cursor()
-	query = "SELECT " + ", ".join(trainingAttributes) + "FROM crypto"\
+	query = "SELECT " + ", ".join(trainingAttributes) + "FROM bitcoin"\
 	        + "WHERE Currency=\'"+currencyname+"\'"
-	        + "ORDER BY Timestamp ASC"
+	        + "ORDER BY time ASC"
 	cursor.execute(query)
 	results = cursor.fetchall()
 	all_data = pd.DataFrame(all_data, columns=trainingAttributes)
