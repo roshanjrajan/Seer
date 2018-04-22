@@ -15,7 +15,9 @@ from keras.models import load_model
 from build_lstm_model import *
 
 def normalize_window_np(window, indices):
-    ret = window/(window[:][0]+1)-1
+    ret = window.copy()
+    for i in indices:
+        ret[0][i] = ret[0][i]/(ret[0][i][0]+1)
     return ret
 
 def predict_future(currencyname, daycount, inputmodelname):

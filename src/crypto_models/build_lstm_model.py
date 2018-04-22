@@ -26,7 +26,7 @@ DISCOVERED_COLS = ['volatility']
 # of the first value in the window
 def normalize_window_df(window, columnNames):
     for col in columnNames:
-    	window.loc[:,col] = window[col]/(window[col].iloc[0]+1) - 1
+    	window.loc[:,col] = window[col]/(window[col].iloc[0]) - 1
 
 def discover_features(frame):
     frame['volatility'] = (frame['high']-frame['low'])/(frame['close']+1)
@@ -64,14 +64,12 @@ def main():
 	''' creating windows of timeseries data and normalising windows '''
 	lstm_train_input = []
 	for i in range(len(train_data)-WINDOW_LEN):
-            if (i%1000==0): print i
 	    w = train_data[i:(i+WINDOW_LEN)].copy()
 	    lstm_train_input.append(w)
 	for i in range(len(lstm_train_input)):
-            if (i%1000==0): print i
             normalize_window_df(lstm_train_input[i], COLS_TO_NORMALIZE)
 	lstm_train_output = \
-	 (train_data[WINDOW_LEN:].values/(train_data[:-WINDOW_LEN].values+1))-1 # normalized
+	 (train_data[WINDOW_LEN:].values/(train_data[:-WINDOW_LEN].values))-1 # normalized
         del(train_data)
 
 	''' putting input windows into numpy arrays '''

@@ -59,9 +59,9 @@ def main():
 
     trans = past_df.tail(1).append(futr_df.head(1))
 
-    plt.plot(past_times, past_df['close'])
-    plt.plot([past_times[-1], futr_times[0]], trans['close'])
-    plt.plot(futr_times, futr_df['close'])
+    plt.plot(past_times, past_df['open'])
+    plt.plot([past_times[-1], futr_times[0]], trans['open'])
+    plt.plot(futr_times, futr_df['open'])
     plt.savefig(argcurrencyname+"_plot.png")
 
 if __name__ == "__main__":
