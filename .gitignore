@@ -4,3 +4,4 @@ bin/*
 include/*
 *.pyc
 *.swp
+*.h5
