@@ -33,7 +33,7 @@ def main():
 	# get the past days data
 	conn = psycopg2.connect("host=localhost dbname=crypto user=postgres")
 	cursor = conn.cursor()
-	query = "SELECT " + ", ".join(TRAINING_ATTRIBUTES) + " FROM ("\
+	query = "SELECT " + ", ".join(TRAINING_ATTRIBUTES) + ", time FROM ("\
 	        + "SELECT " + ", ".join(TRAINING_ATTRIBUTES)+", time FROM bitcoin "\
 	        + " WHERE UPPER(Currency)=UPPER(\'"+currencyname+"\')"\
 	        + " ORDER BY Time DESC LIMIT "+str(argpastcount)\
@@ -41,15 +41,28 @@ def main():
 	        + " ORDER BY time ASC"
 	cursor.execute(query)
 	results = cursor.fetchall()
-	past_df = pd.DataFrame(results, columns=TRAINING_ATTRIBUTES)
+	past_df = pd.DataFrame(results, columns=TRAINING_ATTRIBUTES+['time'])
 	conn.close()
+
+	# get time data
+	initial_time = past_df['time'][0]
+	past_df.drop(columns=['time'])
+	print initial_time
+	exit()
+
+	past_times = initial_time
+
 
 	# get the predicted future data
 	future_df = predict_future(inputmodelname = modelname,
 					currencyname = argcurrencyname,
 					daycount = argfuturecount)
 
-	print past_df, future_df
+
+	# print past_df, future_df
+
+	plt.plot(past['time'], past['price'])
+	plt.plot(futr['time'], futr['price'])
 
 if __name__ is "__main__":
 	main()
