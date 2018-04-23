@@ -62,7 +62,7 @@ def main():
     plt.plot(past_times, past_df['open'])
     plt.plot([past_times[-1], futr_times[0]], trans['open'])
     plt.plot(futr_times, futr_df['open'])
-    plt.savefig(argcurrencyname+"_plot.png")
+    plt.savefig("plots/"+argcurrencyname+"_plot.png")
 
 if __name__ == "__main__":
     main()
