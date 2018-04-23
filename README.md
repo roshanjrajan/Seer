@@ -1,2 +1,3 @@
 # SEER
-CS 411 Projec
+CS 411 Project
+Contributers: Smit, Roshan, Alex

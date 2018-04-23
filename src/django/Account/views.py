@@ -3,6 +3,9 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
+from django.conf import settings
+from django.contrib import messages
+from django.core.mail import send_mail
 
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -35,8 +38,12 @@ def register(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-			user.email_user(subject, message)
+			from_email = settings.EMAIL_HOST_USER
+			to_list = [user.email, settings.EMAIL_HOST_USER]
+			# user.email_user(subject, message)
+			send_mail(subject, message, from_email, to_list, fail_silently=True)
 
+			messages.success(request, 'Thank you for joining Seer. Please check you email to activate your account.')
 			return redirect('/account/login/')
 		else:
 			form = SignUpForm()

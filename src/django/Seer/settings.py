@@ -133,12 +133,12 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/portfolio/'
 AUTH_PROFILE_MODULE = 'lib.UserProfile'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_USE_TLS = True
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'youremail@gmail.com'
-# EMAIL_HOST_PASSWORD = 'yourpassword'
-# EMAIL_PORT = 587
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'seer.cloudberry@gmail.com'
+EMAIL_HOST_PASSWORD = 's33rcloudberry'
+EMAIL_PORT = 587
 
 
 # location /static/ {
