@@ -72,8 +72,8 @@ def main():
     
     # plot lines
     plt.plot(past_times, past_df['open'], '#2AA198')
-    plt.plot([past_times[-1], futr_times[0]], trans['open'], 'g')
-    plt.plot(futr_times, futr_df['open'], 'g')
+    plt.plot([past_times[-1], futr_times[0]], trans['open'], '#e8530e')
+    plt.plot(futr_times, futr_df['open'], '#e8530e')
 
     plt.savefig("../django/portfolio/static/portfolio/"+argcurrencyname+"_plot.png")
 
