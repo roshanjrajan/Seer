@@ -60,12 +60,12 @@ def main():
     trans = past_df.tail(1).append(futr_df.head(1))
 
     # plot lines
+    fig, back = plt.subplots(facecolor='#262626')
     plt.plot(past_times, past_df['open'], '#2AA198')
     plt.plot([past_times[-1], futr_times[0]], trans['open'], 'g')
     plt.plot(futr_times, futr_df['open'], 'g')
 
     # pretty up
-    fig, back = plt.subplots(facecolor='#262626')
     ax = plt.gca()
     ax.set_facecolor('#262626')
     for idx in ['top','bottom','left','right']:
