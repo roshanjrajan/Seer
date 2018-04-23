@@ -15,7 +15,7 @@ from keras.layers import Dropout
 from keras.models import load_model
 
 WINDOW_LEN = 10
-MAX_TRAIN_SIZE = 16000
+MAX_TRAIN_SIZE = 8000
 NEURON_COUNT = 20
 NUM_EPOCHS = 10
 TRAINING_ATTRIBUTES = ['open', 'high', 'low', 'close', 'volumefrom', 'volumeto']
@@ -69,7 +69,7 @@ def main():
 	for i in range(len(lstm_train_input)):
             normalize_window_df(lstm_train_input[i], COLS_TO_NORMALIZE)
 	lstm_train_output = \
-	 (train_data[WINDOW_LEN:].values/(train_data[:-WINDOW_LEN].values))-1 # normalized
+	 (train_data[WINDOW_LEN:].values/(train_data[:-WINDOW_LEN].values+1))-1 # normalized
         del(train_data)
 
 	''' putting input windows into numpy arrays '''
@@ -93,7 +93,7 @@ def main():
         hist = m.fit(lstm_train_input, lstm_train_output, epochs=NUM_EPOCHS, batch_size=1, verbose=2, shuffle=True)
 
 	# save the model
-	m.save(currencyname+"_model.h5")
+	m.save("models/"+currencyname+"_model.h5")
 
 if __name__ == "__main__":
     main()

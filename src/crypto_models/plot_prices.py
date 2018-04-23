@@ -59,10 +59,10 @@ def main():
 
     trans = past_df.tail(1).append(futr_df.head(1))
 
-    plt.plot(past_times, past_df['open'])
-    plt.plot([past_times[-1], futr_times[0]], trans['open'])
-    plt.plot(futr_times, futr_df['open'])
-    plt.savefig("plots/"+argcurrencyname+"_plot.png")
+    plt.plot(past_times, past_df['open'], 'b')
+    plt.plot([past_times[-1], futr_times[0]], trans['open'], 'c')
+    plt.plot(futr_times, futr_df['open'], 'c')
+    plt.savefig("../django/portfolio/static/portfolio/"+argcurrencyname+"_plot.png")
 
 if __name__ == "__main__":
     main()
