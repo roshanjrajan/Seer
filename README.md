@@ -1,2 +1,2 @@
 # SEER
-CS 411 Project
+CS 411 Projec
