@@ -66,13 +66,15 @@ def main():
 
     # pretty up
     ax = plt.gca()
+    fig = plt.figure()
+    fig.patch.set_facecolor('#262626')
     ax.set_facecolor('#262626')
     for idx in ['top','bottom','left','right']:
         ax.spines[idx].set_color('white')
     ax.xaxis.label.set_color('white')
     ax.yaxis.label.set_color('white')
     ax.tick_params(axis='x', colors='white')
-    ax.tick_params(axis='y', colors='red')
+    ax.tick_params(axis='y', colors='white')
     
     plt.savefig("../django/portfolio/static/portfolio/"+argcurrencyname+"_plot.png")
 
