@@ -77,8 +77,15 @@ def main():
     ax.tick_params(axis='x', colors='white')
     ax.tick_params(axis='y', colors='white')
 
-    plt.title("$"+str(past_df['open'][len(past_df)-1]))
-    
+    prices_24_hr = np.array([float(past_df['open'][i]) for i in range(24)])
+    avg_24_hr = np.mean(prices_24_hr)
+    dec_change = (futr_df['open'][0]-avg_24_hr)/avg_24_hr
+    str_percent_change = "{0:.2f}%".format(dec_change*100)
+
+    title_obj = plt.title("$"+str(past_df['open'][len(past_df)-1])
+                          +' ('+str_percent_change+')')
+    plt.setp(title_obj, color='white')
+
     # plot lines
     plt.plot(past_times, past_df['open'], '#2AA198')
     plt.plot([past_times[-1], futr_times[0]], trans['open'], '#e8530e')
