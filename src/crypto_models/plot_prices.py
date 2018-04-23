@@ -75,7 +75,7 @@ def main():
     plt.plot([past_times[-1], futr_times[0]], trans['open'], '#e8530e')
     plt.plot(futr_times, futr_df['open'], '#e8530e')
 
-    plt.savefig("../django/portfolio/static/portfolio/"+argcurrencyname+"_plot.png")
+    plt.savefig("../django/portfolio/static/portfolio/"+argcurrencyname+"_plot.png", facecolor=fig.get_facecolor(), transparent=True)
 
 if __name__ == "__main__":
     main()
