@@ -60,15 +60,24 @@ def main():
     trans = past_df.tail(1).append(futr_df.head(1))
 
     # pretty up
+    plt.figure(figsize=(15,6))
     fig, back = plt.subplots(facecolor='#262626')
     ax = plt.gca()
     ax.set_facecolor('#262626')
-    for idx in ['top','bottom','left','right']:
+    plt.xlabel("Time (unix timestamp)")
+    plt.ylabel("Open Price (USD)")
+    
+    for idx in ['bottom','left']:
         ax.spines[idx].set_color('white')
+    for idx in ['top','right']:
+        ax.spines[idx].set_color('#262626')
+    
     ax.xaxis.label.set_color('white')
     ax.yaxis.label.set_color('white')
     ax.tick_params(axis='x', colors='white')
     ax.tick_params(axis='y', colors='white')
+
+    plt.title("$"+str(past_df['open'][len(past_df)-1]))
     
     # plot lines
     plt.plot(past_times, past_df['open'], '#2AA198')
