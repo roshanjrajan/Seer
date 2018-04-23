@@ -65,9 +65,8 @@ def main():
     plt.plot(futr_times, futr_df['open'], 'g')
 
     # pretty up
+    fig, back = plt.subplots(facecolor='#262626')
     ax = plt.gca()
-    fig = plt.figure()
-    fig.patch.set_facecolor('#262626')
     ax.set_facecolor('#262626')
     for idx in ['top','bottom','left','right']:
         ax.spines[idx].set_color('white')
