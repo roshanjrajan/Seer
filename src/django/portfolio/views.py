@@ -4,10 +4,6 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from .models import Transaction
 
 # Create your views here.
-class port_view(TemplateView):
-	template_name = 'portfolio/home.html'
-
-
 class TransactionListView(ListView):
     model = Transaction
 
@@ -26,3 +22,12 @@ class TransactionDeleteView(DeleteView):
     model = Transaction
     fields = '__all__'
     success_url = "/portfolio/txn"
+
+def BTC(request):
+    return render(request, 'portfolio/BTC.html')
+
+def LTC(request):
+    return render(request, 'portfolio/LTC.html')
+
+def ETH(request):
+    return render(request, 'portfolio/ETH.html')

@@ -2,6 +2,13 @@
 
 {% block content %}
 
+<div>
+  <p></p>
+  <p class="anime">
+    Welcome {{ user.username }}...<span class="cursor">|</span>
+  </p>
+<div>
+
 <h2>Portfolio: Transactions</h2>
 <hr>
 
@@ -20,7 +27,7 @@
   <tr>
     <td>{{ t.account }}</td>
     <td>{{ t.action }}</td>
-    <td>{{ t.date|date:"d M Y" }}</td>
+    <td>{{ t.currency }}</td>
     <td>{{ t.number_of_stocks }}</td>
     <td>{{ t.price }}</td>
     <td>{{ t.time }}</td>
@@ -34,5 +41,21 @@
   {% endfor %}
 
 </table>
+
+<br>
+<form action="/portfolio/txn/create">
+  <input type="submit" value="Buy">
+</form>
+<br>
+<p class="anime"> See tomorrow's evaluation for the following Crypto </p>
+<form action="/portfolio/BTC/">
+  <input type="submit" value="Bitcoin">
+</form>
+<form action="/portfolio/ETH/">
+  <input type="submit" value="Etherium">
+</form>
+<form action="/portfolio/LTC/">
+  <input type="submit" value="Litecoin">
+</form>
 
 {% endblock %}

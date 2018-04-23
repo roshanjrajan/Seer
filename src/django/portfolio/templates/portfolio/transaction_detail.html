@@ -9,28 +9,28 @@
   {% csrf_token %}
   <table>
     <tr>
+      <th>Account</th>
+      <td><input type="text" name="date" value="{{ transaction.account }}" /></td>
+    </tr>
+    <tr>
       <th>Action</th>
       <td><input type="text" name="action" value="{{ transaction.action }}" /></td>
     </tr>
     <tr>
-      <th>Date</th>
-      <td><input type="text" name="date" value="{{ transaction.date }}" /></td>
-    </tr>
-    <tr>
-      <th>Security</th>
-      <td><input type="text" name="security" value="{{ transaction.security }}" /></td>
+      <th>Currency</th>
+      <td><input type="text" name="security" value="{{ transaction.currency }}" /></td>
     </tr>
     <tr>
       <th>Shares</th>
-      <td><input type="text" name="shares" value="{{ transaction.shares }}" /></td>
+      <td><input type="text" name="shares" value="{{ transaction.number_of_stocks }}" /></td>
     </tr>
     <tr>
       <th>Price</th>
       <td><input type="text" name="price" value="{{ transaction.price }}" /></td>
     </tr>
     <tr>
-      <th>Commission</th>
-      <td><input type="text" name="commission" value="{{ transaction.commission }}" /></td>
+      <th>Time</th>
+      <td><input type="text" name="commission" value="{{ transaction.time }}" /></td>
     </tr>
   </table>
   <input type="submit" />

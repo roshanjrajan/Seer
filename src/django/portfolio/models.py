@@ -14,5 +14,5 @@ class Transaction(models.Model):
     time = models.TimeField('Time')
 
     def __unicode__(self):
-      return self.action + ' ' + str(self.number_of_stocks) + ' ' + self.security
+      return self.action + ' ' + str(self.number_of_stocks)
 
