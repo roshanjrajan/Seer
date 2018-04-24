@@ -1,6 +1,6 @@
 import urllib.request, json, psycopg2
-c_url="https://min-api.cryptocompare.com/data/histohour?fsym=BTC&tsym=USD&limit=10"
-values = {'fsym': "BTC", "tsym" : "USD", "limit" : 10}
+c_url="https://min-api.cryptocompare.com/data/histohour?fsym=BTC&tsym=USD&limit=100"
+values = {'fsym': "BTC", "tsym" : "USD", "limit" : 100}
 currency = ['BTC', 'ETH', 'LTC']
 in_value = urllib.parse.urlencode(values).encode("ascii")
 conn = psycopg2.connect("host=localhost dbname=crypto user=postgres")

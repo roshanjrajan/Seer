@@ -14,8 +14,8 @@ from keras.layers import LSTM
 from keras.layers import Dropout
 from keras.models import load_model
 
-WINDOW_LEN = 10
-MAX_TRAIN_SIZE = 8000
+WINDOW_LEN = 24
+MAX_TRAIN_SIZE = 5000
 NEURON_COUNT = 20
 NUM_EPOCHS = 10
 TRAINING_ATTRIBUTES = ['open', 'high', 'low', 'close', 'volumefrom', 'volumeto']
